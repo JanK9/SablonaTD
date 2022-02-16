@@ -1,0 +1,41 @@
+Sub FileSave()
+
+' Čteni hodnoty buňky a zápis do vlasnosti, přeskočí chybějící buňky nebo vlastnost
+' Navázané na řádek "Popis revize" a "Change Description"
+
+Dim rnRangeOfPropertyName As Range
+Dim rnRangeOfProperty As Range
+Dim strPropertyString As String
+
+'For all rows in table
+Dim i As Integer
+For i = 1 To ActiveDocument.Tables(1).Range.Rows.Count
+Set rnRangeOfPropertyName = ActiveDocument.Tables(1).Cell(i, 1).Range
+Set rnRangeOfProperty = ActiveDocument.Tables(1).Cell(i, 2).Range
+
+'If left cell is the property name, set the property to the text in second cell
+If (InStr(1, rnRangeOfPropertyName.Text, "Change Description", vbTextCompare)) > 0 Then
+strPropertyString = rnRangeOfProperty.Text
+'Remove "" and empty rows
+strPropertyString = Replace(strPropertyString, "", "")
+strPropertyString = Replace(strPropertyString, "vbCrLf", "")
+ActiveDocument.CustomDocumentProperties.Item("!Change Description").Value = strPropertyString
+
+ElseIf (InStr(1, rnRangeOfPropertyName.Text, "Popis revize", vbTextCompare)) > 0 Then
+strPropertyString = rnRangeOfProperty.Text
+strPropertyString = Replace(strPropertyString, "", "")
+'Remove "" and empty rows
+strPropertyString = Replace(strPropertyString, "vbCrLf", "")
+ActiveDocument.CustomDocumentProperties.Item("!Popis revize").Value = strPropertyString
+
+ElseIf (InStr(1, rnRangeOfPropertyName.Text, "Change Description", vbTextCompare)) > 0 Then
+strPropertyString = rnRangeOfProperty.Text
+strPropertyString = Replace(strPropertyString, "", "")
+'Remove "" and empty rows
+strPropertyString = Replace(strPropertyString, "vbCrLf", "")
+ActiveDocument.CustomDocumentProperties.Item("!Change Description").Value = strPropertyString
+
+End If
+Next i
+
+End Sub
